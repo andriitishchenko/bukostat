@@ -1,0 +1,120 @@
+select a.date, dy, ny
+from 
+( select date as d from report group by date ) dt
+join ( select temp as t from report where hrs <7 and hrs >19  ) dayt
+
+ 
+=========
+select avg(temp) as dayly from report where date="2003-01-01" and hrs>7 and hrs<19
+========
+
+select date, avg(temp) as dayly from report where hrs>7 and hrs<19 
+group by date
+limit 10
+
+====
+select date, avg(temp) as dayly from report where hrs<=7 and hrs>=19
+group by date
+limit 10
+
+
+=======
+
+V1
+
+select a.date, b.temp, c.temp
+from 
+(select distinct date  from report) a
+left join
+(select date, avg(temp) as temp from report where hrs>7 and hrs<19 group by date) b on b.date=a.date
+left join
+(select  date, avg(temp) as temp from report where hrs<=7 and hrs>=19 group by date) c on c.date=a.date
+======
+
+
+v2
+
+select a.date, a.temp day, c.temp night
+from 
+(select date, avg(temp) as temp from report where hrs>7 and hrs<19 group by date) a
+left join
+(select date, avg(temp) as temp from report where hrs<=7 or hrs>=19 group by date) c on c.date=a.date
+
+--------
+v3
+
+select a.date, round(a.temp) day, round(c.temp) night
+from 
+(select date, avg(temp) as temp from report where hrs>7 and hrs<19 group by date) a
+left join
+(select date, avg(temp) as temp from report where hrs<=7 or hrs>=19 group by date) c on c.date=a.date
+
+
+===========
+
+
+v4 65ms
+
+select a.date, round(a.temp) day, round(c.temp) night , round(d.temp) sumary
+from 
+(select date, avg(temp) as temp from report where hrs>7 and hrs<19 group by date) a
+left join
+(select date, avg(temp) as temp from report where hrs<=7 or hrs>=19 group by date) c on c.date=a.date
+left join
+(select date, avg(temp) as temp from report group by date) d on d.date=a.date
+
+
+===========
+v5  48ms
+
+select a.date, round(a.temp) day, round(c.temp) night ,round((a.temp+c.temp)/2) sumary
+from 
+(select date, avg(temp) as temp from report where hrs>7 and hrs<19 group by date) a
+left join
+(select date, avg(temp) as temp from report where hrs<=7 or hrs>=19 group by date) c on c.date=a.date
+
+
+
+
+==========
+
+
+select a.date, a.temp day, c.temp night ,(a.temp+c.temp)/2 sumary
+from 
+(select date, avg(temp) as temp from report where hrs>7 and hrs<19 group by date) a
+left join
+(select date, avg(temp) as temp from report where hrs<=7 or hrs>=19 group by date) c on c.date=a.date
+
+=============
+
+
+=====
+select * from stat1
+where 
+0+strftime('%m', date)=11
+
+and sumary<=0
+====
+
+select * from stat1
+where 
+0+strftime('%m', date) in (11 ,12)
+
+
+==================
+select distinct 0+strftime('%Y', date) as Yrs from report
+
+===
+select cast(strftime('%m', '2017-03-10') as number)
+
+======
+
+select  0+strftime('%Y', date) as Y, group_concat(sumary) dtemp
+from stat2
+where 
+0+strftime('%m', date) in (11 )
+group by Y
+
+
+
+===========

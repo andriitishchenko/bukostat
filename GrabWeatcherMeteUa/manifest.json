@@ -1,0 +1,69 @@
+{
+    "name": "Grag weather",
+    "version": "1.2",
+    "description": "Parser Weather from Meteo.ua",
+    "minimum_chrome_version": "16.0.884",
+    "author":"Andrii Tishchenko andrii.tishchenko@gmail.com", 
+    "permissions": [
+        "downloads",
+        "proxy", 
+        "webRequestBlocking", 
+        "\u003Call_urls>", 
+        "storage", 
+        "tabs", 
+        "activeTab",
+        "webNavigation", 
+        "cookies",
+        "activeTab",
+        "contextMenus",
+        "topSites",
+        "notifications",
+        "storage"
+    ],
+    "manifest_version": 2,
+    "icons": {
+            "16": "images/icon16.png",
+            "48": "images/icon48.png",
+            "128": "images/icon128.png"
+    },
+    "background": {
+        "persistent": true,
+        "scripts": [
+            // "utils.js",
+            "net.js"
+            // "background.js"
+        ]
+    },
+    "browser_action": {
+        "default_icon": "images/icon.png"
+    },
+    "content_scripts": [
+        {
+            "css": [
+                "css.css"
+            ],
+            "js": [
+                "jquery-3.2.1.min.js",
+                // "utils.js",
+                "net.js",
+                "content.js"
+
+            ],
+            "matches": [
+                 "http://meteo.ua/archive/1311/bukovel/*"
+            ]
+        }
+    ],
+    "content_security_policy": "script-src 'self' 'unsafe-eval' object-src 'self'",
+    "web_accessible_resources": [
+        "jquery-3.2.1.min.js"
+        // "utils.js"
+        
+        
+    ],
+    "externally_connectable": {
+        "matches": [
+            "http://meteo.ua/archive/1311/bukovel/*"
+        ]
+    }
+}
